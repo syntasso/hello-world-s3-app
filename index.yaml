@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  hello-world-s3-app:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-01-16T11:46:40.502686931Z"
+    description: A Helm chart for Kubernetes app depending on S3
+    digest: 9d02f997201a0e8c7f9ed8897d14d64dd2172808af8792a711de53feed9bcdfd
+    name: hello-world-s3-app
+    type: application
+    urls:
+    - https://github.com/syntasso/hello-world-s3-app/releases/download/hello-world-s3-app-0.1.0/hello-world-s3-app-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-01-16T11:46:40.502692501Z"
