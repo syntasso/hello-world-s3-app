@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -27,7 +28,6 @@ func main() {
 		region = "us-east-1" // Default region
 	}
 
-	// Load AWS configuration
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithHTTPClient(&http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
@@ -36,25 +36,34 @@ func main() {
 		},
 	}))
 
-	// Create S3 client
-	s3Client := s3.NewFromConfig(cfg)
+	// Load AWS configuration
+	maxRetries := 120
+	for i := 0; i < maxRetries; i++ {
+		time.Sleep(time.Second)
+		// Create S3 client
+		s3Client := s3.NewFromConfig(cfg)
 
-	// Create uploader
-	uploader := manager.NewUploader(s3Client)
+		// Create uploader
+		uploader := manager.NewUploader(s3Client)
 
-	// File content
-	content := "Hello, World!"
-	fileKey := "hello-world.txt"
+		// File content
+		content := "Hello, World!"
+		fileKey := "hello-world.txt"
 
-	// Upload file
-	_, err = uploader.Upload(context.TODO(), &s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(fileKey),
-		Body:   strings.NewReader(content),
-	})
-	if err != nil {
-		log.Fatalf("failed to upload file: %v", err)
+		// Upload file
+		_, err = uploader.Upload(context.TODO(), &s3.PutObjectInput{
+			Bucket: aws.String(bucketName),
+			Key:    aws.String(fileKey),
+			Body:   strings.NewReader(content),
+		})
+		if err == nil {
+			fmt.Printf("File uploaded successfully: %s\n", fileKey)
+			time.Sleep(10000 * time.Second)
+		}
+
+		fmt.Printf("Failed to upload file: %v\n", err)
+		if i == maxRetries-1 {
+			log.Fatalf("Failed to upload file after %d retries", maxRetries)
+		}
 	}
-
-	fmt.Printf("File '%s' successfully uploaded to bucket '%s'\n", fileKey, bucketName)
 }
