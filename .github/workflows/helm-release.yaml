@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
-    paths: ["hello-world-s3-app/**"]
 
 env:
   GITHUB_TOKEN: "${{ secrets.CR_TOKEN }}"
