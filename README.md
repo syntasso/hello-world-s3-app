@@ -1,1 +1,0 @@
-# hello-world-s3-app

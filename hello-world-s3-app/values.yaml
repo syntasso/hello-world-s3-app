@@ -1,6 +1,0 @@
-aws:
-  region: "us-east-1"
-  bucketName: "my-bucket"
-
-secret:
-  name: "aws-credentials"
